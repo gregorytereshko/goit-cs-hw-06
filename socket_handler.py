@@ -1,5 +1,5 @@
 import socket
-import threading
+from multiprocessing import Process
 import datetime
 
 
@@ -34,16 +34,12 @@ class SocketHandler:
         try:
             while True:
                 client_sock, address = server_socket.accept()
-                print(f"Accepted connection from {address}")
-                thread = threading.Thread(
-                    target=self.handle_client_connection, args=(client_sock,))
-                thread.start()
-        except KeyboardInterrupt:
-            print("Socket server shutting down...")
+                Process(target=self.handle_client_connection,
+                        args=(client_sock,)).start()
         finally:
             server_socket.close()
 
     def start(self):
-        thread = threading.Thread(target=self.run)
-        thread.start()
-        return thread
+        process = Process(target=self.run)
+        process.start()
+        return process

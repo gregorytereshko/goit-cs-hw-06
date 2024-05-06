@@ -3,7 +3,7 @@ import urllib.parse
 import pathlib
 import mimetypes
 import socket
-import threading
+from multiprocessing import Process
 
 
 class HttpHandler(BaseHTTPRequestHandler):
@@ -65,6 +65,6 @@ class HttpHandler(BaseHTTPRequestHandler):
         server_address = ('', cls.http_port)
         httpd = HTTPServer(server_address, cls)
         print(f"HTTP Server Running on port {cls.http_port}...")
-        server_thread = threading.Thread(target=httpd.serve_forever)
-        server_thread.start()
-        return server_thread
+        server_process = Process(target=httpd.serve_forever)
+        server_process.start()
+        return server_process
